@@ -16,7 +16,7 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
             _entities = context.Set<TEntity>();
         }
 
-        public async Task<TEntity> Add(TEntity entity) 
+        public async Task<TEntity> AddAsync(TEntity entity) 
         {
             var entityAdded = await _entities.AddAsync(entity);
             return entityAdded.Entity;
@@ -24,14 +24,14 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
 
         public async Task Delete(int id)
         {
-            var entity = await FindById(id);
+            var entity = await FindByIdAsync(id);
             if(entity != null) 
             {
                 _entities.Remove(entity);
             }
         }
 
-        public async Task<TEntity> FindById(int id) => await _entities.FindAsync(id);
+        public async Task<TEntity> FindByIdAsync(int id) => await _entities.FindAsync(id);
         public async Task<TEntity> FindByIdWithCollections(int id, params string[] includeProperties)
         {
             IQueryable<TEntity> queryable = _entities;
@@ -45,8 +45,6 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
 
         public IEnumerable<TEntity> GetAll() => _entities.AsEnumerable();
 
-        public async Task Save() => await _context.SaveChangesAsync();
-
         public void Update(TEntity entity)
         {
             _entities.Attach(entity);
@@ -57,5 +55,8 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
         {
             return _entities.Where(predicate);
         }
+
+        public IQueryable<TEntity> AsQueryable() => _entities;
+
     }
 }

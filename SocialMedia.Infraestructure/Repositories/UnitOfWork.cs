@@ -1,34 +1,91 @@
-﻿using SocialMedia.Core.Entities.CommentEntity;
-using SocialMedia.Core.Entities.PostEntity;
-using SocialMedia.Core.Entities.UserEntity;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Infraestructure.Data;
 using SocialMedia.Infraestructure.Repositories.GenericRepository;
+using System.Data.Common;
+using System.Data;
 
 namespace SocialMedia.Infraestructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly SocialMediaContext _context;
-        private IRepository<Post> _postRepository;
-        private IRepository<User> _userRepository;
-        private IRepository<Comment> _commentRepository;
+        private IDbContextTransaction? _transaction;
+        
         public UnitOfWork(SocialMediaContext context)
         {
             _context = context;
         }
-        public IRepository<Post> Posts => _postRepository ??= new Repository<Post>(_context);
-        public IRepository<User> Users => _userRepository ??= new Repository<User>(_context);
-        public IRepository<Comment> Comments => _commentRepository ??= new Repository<Comment>(_context);
+
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity
+        {
+            return new Repository<TEntity>(_context);
+        }
+
+        public void Save()
+        {
+            try
+            {
+                if(_transaction == null)
+                {
+                    BeginTransaction();
+                    _context.SaveChanges();
+                    Commit();
+                    return;
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                RollBack();
+            }
+        }
+
+        public async Task SaveAsync()
+        {
+            try
+            {
+                if (_transaction == null)
+                {
+                    BeginTransaction();
+                    await _context.SaveChangesAsync();
+                    Commit();
+                    return;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                RollBack();
+            }
+        }
+
+        public void BeginTransaction()
+        {
+            _transaction ??= _context.Database.BeginTransaction();
+        }
 
         public void Commit()
         {
-            _context.SaveChanges();
+            if (_transaction != null)
+            {
+                _transaction.Commit();
+                _transaction.Dispose();
+                _transaction = null;
+            }
         }
 
-        public async Task CommitAsync()
+        public void RollBack()
         {
-            await _context.SaveChangesAsync();
+            if (_transaction != null)
+            {
+                _transaction.Rollback();
+                _transaction.Dispose();
+                _transaction = null;
+            }
         }
 
         public void Dispose()
@@ -37,6 +94,30 @@ namespace SocialMedia.Infraestructure.Repositories
             {
                 _context.Dispose();
             }
+        }
+
+        public List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, params object[] parameters) where T : class
+        {
+            DbCommand command = _context.Database.GetDbConnection().CreateCommand();
+            command.CommandType = CommandType.Text;
+            command.CommandText = query;
+            command.Parameters.AddRange(parameters); 
+            _context.Database.GetDbConnection().Open();
+
+            List<T> result = new();
+            DbDataReader reader= command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                result.Add(map(reader));
+            }
+
+            return result;
+        }
+
+        public void SetCommandTimeout(int seconds)
+        {
+            _context.Database.SetCommandTimeout(TimeSpan.FromSeconds(seconds));
         }
     }
 }

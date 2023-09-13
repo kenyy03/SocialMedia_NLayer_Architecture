@@ -875,6 +875,9 @@
         }
       },
       "SocialMedia.Core/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.4"
+        },
         "runtime": {
           "SocialMedia.Core.dll": {}
         }

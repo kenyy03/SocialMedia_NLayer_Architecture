@@ -1,15 +1,17 @@
-﻿using SocialMedia.Core.Entities.CommentEntity;
-using SocialMedia.Core.Entities.PostEntity;
-using SocialMedia.Core.Entities.UserEntity;
+﻿using SocialMedia.Core.Entities;
+using System.Data.Common;
 
 namespace SocialMedia.Core.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Post> Posts { get; }
-        IRepository<User> Users { get; }
-        IRepository<Comment> Comments { get; }
+        IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity;
+        void Save();
+        Task SaveAsync();
         void Commit();
-        Task CommitAsync();
+        void RollBack();
+        void BeginTransaction();
+        List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, params object[] parameters) where T : class;
+        void SetCommandTimeout(int seconds);
     }
 }

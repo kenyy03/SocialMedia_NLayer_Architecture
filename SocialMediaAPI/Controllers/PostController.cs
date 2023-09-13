@@ -25,46 +25,87 @@ namespace SocialMedia.API.Controllers
         [HttpGet("get-all")]
         public IActionResult GetPosts()
         {
-            var posts = _postService.GetPosts();
-            var postsMaterialized = _mapper.Map<IEnumerable<PostDTO>>(posts);
-            var response = new ApiResponse<IEnumerable<PostDTO>> (postsMaterialized);
-            return Ok(response);
+            try
+            {
+                var posts = _postService.GetPosts();
+                var postsMaterialized = _mapper.Map<IEnumerable<PostDTO>>(posts);
+                var response = ApiResponse<IEnumerable<PostDTO>>.Success(postsMaterialized);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                IEnumerable<PostDTO> postDTOs = Enumerable.Empty<PostDTO>();
+                var response = ApiResponse<IEnumerable<PostDTO>>.Failure(postDTOs, ex.InnerException?.Message ?? ex.Message);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet("get-by-id")]
         public async Task<IActionResult> GetPost([FromQuery] int id)
         {
-            var post = await _postService.GetPostById(id);
-            var postMaterialized = _mapper.Map<PostDTO>(post);
-            var response = new ApiResponse<PostDTO>(postMaterialized);
-            return Ok(response);
+            try
+            {
+                var post = await _postService.GetPostById(id);
+                var postMaterialized = _mapper.Map<PostDTO>(post);
+                var response = ApiResponse<PostDTO>.Success(postMaterialized);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = ApiResponse<PostDTO>.Failure(new PostDTO(), ex.InnerException?.Message ?? ex.Message);
+                return BadRequest();
+            }
         }
 
         [HttpPost("create-post")]
         public async Task<IActionResult> CreatePost([FromBody] PostDTO newPost )
         {
-            var newPostEntity = _mapper.Map<Post>(newPost);
-            var postResponse = await _postService.AddPost(newPostEntity);
-            var entityToDTO = _mapper.Map<PostDTO>(postResponse);
-            var response = new ApiResponse<PostDTO>(entityToDTO);
-            return Ok(response);
+            try
+            {
+                var newPostEntity = _mapper.Map<Post>(newPost);
+                var postResponse = await _postService.AddPost(newPostEntity);
+                var entityToDTO = _mapper.Map<PostDTO>(postResponse);
+                var response = ApiResponse<PostDTO>.Success(entityToDTO);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = ApiResponse<PostDTO>.Failure(new PostDTO(), ex.InnerException?.Message ?? ex.Message);
+                return BadRequest(response);
+            }
         }
 
         [HttpPut("update-post")]
         public async Task<IActionResult> UpdatePost([FromBody] PostDTO post)
         {
-            var dtoToEntity = _mapper.Map<Post>(post);
-            var postResponse = await _postService.UpdatePost(dtoToEntity);
-            var response = new ApiResponse<bool>(postResponse);
-            return Ok(response);
+            try
+            {
+                var dtoToEntity = _mapper.Map<Post>(post);
+                var postResponse = await _postService.UpdatePost(dtoToEntity);
+                var response = ApiResponse<bool>.Success(postResponse);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = ApiResponse<bool>.Failure(false, ex.InnerException?.Message ?? ex.Message);
+                return BadRequest(response);
+            }
         }
 
         [HttpDelete("delete-post")]
         public async Task<IActionResult> DeletePost([FromQuery] int id)
         {
-            var postResponse = await _postService.DeletePost(id);
-            var response = new ApiResponse<bool>(postResponse);
-            return Ok(response);
+            try
+            {
+                var postResponse = await _postService.DeletePost(id);
+                var response = ApiResponse<bool>.Success(postResponse);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = ApiResponse<bool>.Failure(false, ex.InnerException?.Message ?? ex.Message);
+                return BadRequest(response);
+            }
         }
     }
 }

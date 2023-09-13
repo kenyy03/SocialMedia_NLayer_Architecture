@@ -18,8 +18,9 @@ builder.Services.AddControllers(options => options.Filters.Add<GlobalExceptionsF
 builder.Services.AddDbContext<SocialMediaContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("SocialMedia")));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddMvc(options => options.Filters.Add<ValidationFilter>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
