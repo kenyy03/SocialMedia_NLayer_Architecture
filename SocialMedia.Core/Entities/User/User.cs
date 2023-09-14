@@ -9,6 +9,10 @@ namespace SocialMedia.Core.Entities.UserEntity
         {
             Comments = new HashSet<Comment>();
             Posts = new HashSet<Post>();
+            Names = string.Empty;
+            LastNames = string.Empty;
+            Email = string.Empty;
+            PhoneNumber = string.Empty;
         }
 
         public string Names { get; set; }

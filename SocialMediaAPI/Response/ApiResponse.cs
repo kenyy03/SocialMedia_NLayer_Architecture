@@ -7,10 +7,9 @@ namespace SocialMedia.API.Response
         public ApiResponse() 
         {
             Message = string.Empty;
-            
         }
 
-        public T Data { get; set; } = default(T);
+        public T? Data { get; set; } = default;
         public string Message { get; set; }
         public HttpStatusCode Status { get; set; }
 

@@ -5,6 +5,10 @@ namespace SocialMedia.Core.Entities.CommentEntity
 {
     public class Comment : BaseEntity
     {
+        public Comment()
+        {
+            Description = string.Empty;
+        }
         public int PostId { get; set; }
         public int UserId { get; set; }
         public string Description { get; set; }

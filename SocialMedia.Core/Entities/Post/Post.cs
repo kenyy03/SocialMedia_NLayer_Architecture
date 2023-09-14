@@ -8,6 +8,9 @@ namespace SocialMedia.Core.Entities.PostEntity
         public Post()
         {
             Comments = new HashSet<Comment>();
+            Description = string.Empty;
+            Image = string.Empty;
+            IdUserNavigation = new();
         }
 
         public int UserId { get; set; }

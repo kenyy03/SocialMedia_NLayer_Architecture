@@ -1,4 +1,5 @@
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\bin\Debug\net7.0\SocialMedia.Infraestructure.deps.json
+C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\bin\Debug\net7.0\SocialMedia.Infraestructure.runtimeconfig.json
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\bin\Debug\net7.0\SocialMedia.Infraestructure.dll
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\bin\Debug\net7.0\SocialMedia.Infraestructure.pdb
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\bin\Debug\net7.0\SocialMedia.Core.dll
@@ -12,6 +13,5 @@ C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Deb
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Debug\net7.0\SocialMedia.Infraestructure.dll
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Debug\net7.0\refint\SocialMedia.Infraestructure.dll
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Debug\net7.0\SocialMedia.Infraestructure.pdb
-C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Debug\net7.0\ref\SocialMedia.Infraestructure.dll
-C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\bin\Debug\net7.0\SocialMedia.Infraestructure.runtimeconfig.json
 C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Debug\net7.0\SocialMedia.Infraestructure.genruntimeconfig.cache
+C:\Users\Keny\source\repos\c#\SocialMediaAPI\SocialMedia.Infraestructure\obj\Debug\net7.0\ref\SocialMedia.Infraestructure.dll
