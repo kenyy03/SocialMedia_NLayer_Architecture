@@ -51,7 +51,7 @@ namespace SocialMedia.Infraestructure.Repositories
                 {
                     BeginTransaction();
                     await _context.SaveChangesAsync();
-                    Commit();
+                    await CommitAsync();
                     return;
                 }
 
@@ -78,6 +78,16 @@ namespace SocialMedia.Infraestructure.Repositories
             }
         }
 
+        public async Task CommitAsync()
+        {
+            if (_transaction != null)
+            {
+                await _transaction.CommitAsync();
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
+        }
+
         public void RollBack()
         {
             if (_transaction != null)
@@ -96,7 +106,7 @@ namespace SocialMedia.Infraestructure.Repositories
             }
         }
 
-        public List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, params object[] parameters) where T : class
+        public IQueryable<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, params object[] parameters) where T : class
         {
             DbCommand command = _context.Database.GetDbConnection().CreateCommand();
             command.CommandType = CommandType.Text;
@@ -104,7 +114,7 @@ namespace SocialMedia.Infraestructure.Repositories
             command.Parameters.AddRange(parameters); 
             _context.Database.GetDbConnection().Open();
 
-            List<T> result = new();
+            List<T> result = new List<T>();
             DbDataReader reader= command.ExecuteReader();
 
             while (reader.Read())
@@ -112,7 +122,7 @@ namespace SocialMedia.Infraestructure.Repositories
                 result.Add(map(reader));
             }
 
-            return result;
+            return result.AsQueryable();
         }
 
         public void SetCommandTimeout(int seconds)

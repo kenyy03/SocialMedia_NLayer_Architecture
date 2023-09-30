@@ -7,7 +7,7 @@ using SocialMedia.Core.Interfaces.Services;
 
 namespace SocialMedia.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/post")]
     [ApiController]
     public class PostController : ControllerBase
     {
@@ -53,7 +53,7 @@ namespace SocialMedia.API.Controllers
             catch (Exception ex)
             {
                 var response = ApiResponse<PostDTO>.Failure(new PostDTO(), ex.InnerException?.Message ?? ex.Message);
-                return BadRequest();
+                return BadRequest(response);
             }
         }
 

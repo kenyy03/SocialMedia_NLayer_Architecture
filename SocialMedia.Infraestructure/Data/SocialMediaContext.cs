@@ -12,10 +12,6 @@ namespace SocialMedia.Infraestructure.Data
     {
         public SocialMediaContext(DbContextOptions<SocialMediaContext> options) : base(options) { }
 
-        public virtual DbSet<Comment> Comments { get; set; }
-        public virtual DbSet<Post> Posts { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new UserMap(modelBuilder.Entity<User>());
