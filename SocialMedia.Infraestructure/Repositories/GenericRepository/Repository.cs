@@ -7,10 +7,10 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly SocialMediaContext _context;
+        private readonly DbContext _context;
         private readonly DbSet<TEntity> _entities;
 
-        public Repository(SocialMediaContext context) 
+        public Repository(DbContext context) 
         {
             _context = context; 
             _entities = context.Set<TEntity>();

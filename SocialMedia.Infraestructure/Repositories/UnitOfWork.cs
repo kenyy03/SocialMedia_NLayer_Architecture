@@ -11,10 +11,10 @@ namespace SocialMedia.Infraestructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly SocialMediaContext _context;
+        private readonly DbContext _context;
         private IDbContextTransaction? _transaction;
         
-        public UnitOfWork(SocialMediaContext context)
+        public UnitOfWork(DbContext context)
         {
             _context = context;
         }

@@ -29,8 +29,7 @@ namespace SocialMedia.API.Controllers
             }
             catch (Exception ex)
             {
-                List<CommentDTO> commentDTOs = new();
-                var response = ApiResponse<List<CommentDTO>>.Failure(commentDTOs, ex.InnerException?.Message ?? ex.Message);
+                var response = ApiResponse<PagedList<CommentDTO>>.Failure(message: ex.InnerException?.Message ?? ex.Message);
                 return BadRequest(response);
             }
         }

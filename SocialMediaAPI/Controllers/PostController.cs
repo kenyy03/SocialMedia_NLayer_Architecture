@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.API.Response;
+using SocialMedia.Core.DTOs;
 using SocialMedia.Core.DTOs.PostDTOs;
 using SocialMedia.Core.Entities.PostEntity;
 using SocialMedia.Core.Interfaces.Services;
@@ -23,19 +24,17 @@ namespace SocialMedia.API.Controllers
         }
 
         [HttpGet("get-all")]
-        public IActionResult GetPosts()
+        public IActionResult GetPosts([FromQuery] PostRequest request)
         {
             try
             {
-                var posts = _postService.GetPosts();
-                var postsMaterialized = _mapper.Map<IEnumerable<PostDTO>>(posts);
-                var response = ApiResponse<IEnumerable<PostDTO>>.Success(postsMaterialized);
+                var posts = _postService.GetPosts(request);
+                var response = ApiResponse<PagedList<PostDTO>>.Success(posts);
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                IEnumerable<PostDTO> postDTOs = Enumerable.Empty<PostDTO>();
-                var response = ApiResponse<IEnumerable<PostDTO>>.Failure(postDTOs, ex.InnerException?.Message ?? ex.Message);
+                var response = ApiResponse<PagedList<PostDTO>>.Failure(message: ex.InnerException?.Message ?? ex.Message);
                 return BadRequest(response);
             }
         }
@@ -52,7 +51,7 @@ namespace SocialMedia.API.Controllers
             }
             catch (Exception ex)
             {
-                var response = ApiResponse<PostDTO>.Failure(new PostDTO(), ex.InnerException?.Message ?? ex.Message);
+                var response = ApiResponse<PostDTO>.Failure(message: ex.InnerException?.Message ?? ex.Message);
                 return BadRequest(response);
             }
         }
@@ -70,7 +69,7 @@ namespace SocialMedia.API.Controllers
             }
             catch (Exception ex)
             {
-                var response = ApiResponse<PostDTO>.Failure(new PostDTO(), ex.InnerException?.Message ?? ex.Message);
+                var response = ApiResponse<PostDTO>.Failure(message: ex.InnerException?.Message ?? ex.Message);
                 return BadRequest(response);
             }
         }

@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SocialMedia.Core.DTOs;
+using SocialMedia.Core.DTOs.PostDTOs;
 using SocialMedia.Core.Entities.PostEntity;
 using SocialMedia.Core.Entities.UserEntity;
+using SocialMedia.Core.Enumerations;
 using SocialMedia.Core.Exceptions;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Interfaces.Services;
@@ -13,10 +16,9 @@ namespace SocialMedia.Core.Services.SocialMediaServices
         private readonly IRepository<Post> _postRepository;
         private readonly IRepository<User> _userRepository;
 
-        public PostService(IUnitOfWork unitOfWork)
+        public PostService(IUnitOfWorkFactory unitOfWorkFactory)
         {
-            if (unitOfWork == null) throw new BusinessExceptions(nameof(unitOfWork));
-            _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWorkFactory.CreateUnitOfWork(UnitOfWorkType.SocialMedia);
             _postRepository = _unitOfWork.GetRepository<Post>();
             _userRepository = _unitOfWork.GetRepository<User>();
         }
@@ -27,10 +29,15 @@ namespace SocialMedia.Core.Services.SocialMediaServices
             return post ?? new Post();
         }
 
-        public IQueryable<Post> GetPosts()
+        public PagedList<PostDTO> GetPosts(PostRequest request)
         {
-            var posts = _postRepository.AsQueryable();
-            return posts;
+            int page = request?.Page ?? 1;
+            int pageSize = request?.Pagesize ?? 10;
+            var posts = _postRepository.AsQueryable()
+                                       .AsNoTracking()
+                                       .Select(s => s.ToDto())
+                                       .AsQueryable();
+            return PagedList<PostDTO>.Create(posts, page, pageSize);
         }
 
         public async Task<Post> AddPost(Post post)

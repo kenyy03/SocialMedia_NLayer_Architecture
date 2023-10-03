@@ -2,6 +2,7 @@
 using SocialMedia.Core.DTOs.CommentDTOs;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Interfaces.Services;
+using SocialMedia.Core.Enumerations;
 
 namespace SocialMedia.Core.Services.SocialMediaServices
 {
@@ -9,9 +10,9 @@ namespace SocialMedia.Core.Services.SocialMediaServices
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CommentService(IUnitOfWork unitOfWork) 
+        public CommentService(IUnitOfWorkFactory unitOfWorkFactory) 
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWorkFactory.CreateUnitOfWork(UnitOfWorkType.SocialMedia);
         }
 
         public PagedList<CommentDTO> GetComments(CommentRequest request)

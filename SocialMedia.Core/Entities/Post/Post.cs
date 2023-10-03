@@ -1,4 +1,5 @@
-﻿using SocialMedia.Core.Entities.CommentEntity;
+﻿using SocialMedia.Core.DTOs.PostDTOs;
+using SocialMedia.Core.Entities.CommentEntity;
 using SocialMedia.Core.Entities.UserEntity;
 
 namespace SocialMedia.Core.Entities.PostEntity
@@ -20,5 +21,17 @@ namespace SocialMedia.Core.Entities.PostEntity
 
         public virtual User IdUserNavigation { get; set; } 
         public virtual ICollection<Comment> Comments { get; set; }
+
+        public PostDTO ToDto()
+        {
+            return new PostDTO
+            {
+                Date = Date,
+                Description = Description,
+                Id = Id,
+                Image = Image,
+                UserId = UserId
+            };
+        }
     }
 }

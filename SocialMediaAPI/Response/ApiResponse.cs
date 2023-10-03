@@ -23,11 +23,11 @@ namespace SocialMedia.API.Response
             };
         }
 
-        public static ApiResponse<T> Failure(T data, string message = "")
+        public static ApiResponse<T> Failure(T data = default, string message = "")
         {
             return new ApiResponse<T>
             {
-                Data = data,
+                Data = default,
                 Message = message,
                 Status = HttpStatusCode.BadRequest
             };
