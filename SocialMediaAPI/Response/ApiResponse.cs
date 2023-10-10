@@ -32,5 +32,15 @@ namespace SocialMedia.API.Response
                 Status = HttpStatusCode.BadRequest
             };
         }
+
+        public static ApiResponse<T> NotFound(T data = default, string message = "")
+        {
+            return new ApiResponse<T>
+            {
+                Data = default,
+                Message = message,
+                Status = HttpStatusCode.NotFound
+            };
+        }
     }
 }

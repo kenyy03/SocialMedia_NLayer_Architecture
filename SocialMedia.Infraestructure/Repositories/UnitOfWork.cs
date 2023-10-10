@@ -106,13 +106,14 @@ namespace SocialMedia.Infraestructure.Repositories
             }
         }
 
-        public IQueryable<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, params object[] parameters) where T : class
+        public IQueryable<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, int timeOut = 30, params object[] parameters) where T : class
         {
             DbCommand command = _context.Database.GetDbConnection().CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = query;
+            command.CommandTimeout = timeOut;
             command.Parameters.AddRange(parameters); 
-            _context.Database.GetDbConnection().Open();
+            _context.Database.OpenConnection();
 
             List<T> result = new List<T>();
             DbDataReader reader= command.ExecuteReader();
@@ -122,6 +123,7 @@ namespace SocialMedia.Infraestructure.Repositories
                 result.Add(map(reader));
             }
 
+            _context.Database.CloseConnection();
             return result.AsQueryable();
         }
 

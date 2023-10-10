@@ -42,7 +42,6 @@ namespace SocialMedia.Core.Services.SocialMediaServices
 
         public async Task<Post> AddPost(Post post)
         {
-            //var user = await _unitOfWork.Users.FindByIdWithCollections(post.UserId, new string[] {"Comments", "Posts"} );
             _unitOfWork.BeginTransaction();
             Post postAdded = new ();
             try
@@ -52,13 +51,13 @@ namespace SocialMedia.Core.Services.SocialMediaServices
                                           .Include(c => c.Comments)
                                           .Include(c => c.Posts)
                                           .FirstOrDefault(f => f.Id == post.UserId);
-                if (user == null) throw new BusinessExceptions($"User: {nameof(user)} doesn't exists");
+                if (user is null) throw new BusinessExceptions($"User: {nameof(user)} doesn't exists");
                 if (post.Description.Contains("Sexo")) throw new BusinessExceptions("No Content Allowed");
                 var userPosts = user.Posts;
                 if (userPosts.Count < 10)
                 {
                     var lastPost = userPosts.OrderByDescending(o => o.Date).FirstOrDefault();
-                    if (lastPost == null) throw new BusinessExceptions($"User doesn't have posts or last post is invalid: {nameof(lastPost)}");
+                    if (lastPost is null) throw new BusinessExceptions($"User doesn't have posts or last post is invalid: {nameof(lastPost)}");
                     bool isPostWithLessSevenDays = (DateTime.Now - lastPost.Date).TotalDays < 7;
                     if (isPostWithLessSevenDays) throw new BusinessExceptions("You aren't able to publish posts");
                 }
@@ -97,6 +96,7 @@ namespace SocialMedia.Core.Services.SocialMediaServices
             {
                 _postRepository.Update(postToUpdate);
                 await _unitOfWork.SaveAsync();
+                _unitOfWork.Commit();
                 return true;
             }
             catch (Exception)

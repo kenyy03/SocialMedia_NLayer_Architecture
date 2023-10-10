@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SocialMedia.API.Response;
 using SocialMedia.Core.DTOs;
 using SocialMedia.Core.DTOs.CommentDTOs;
@@ -13,7 +12,7 @@ namespace SocialMedia.API.Controllers
     {
         private readonly ICommentService _commentService;
 
-        public CommentController(ICommentService commentService, IMapper mapper)
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
         }

@@ -22,7 +22,7 @@ namespace SocialMedia.Core.Services.SocialMediaServices
             int page = request?.Page ?? 1;
             int pageSize = request?.Pagesize ?? 10;
             string spName = "EXEC SpGetActiveComments @StartDate='{0}', @EndDate='{1}'";
-            var query = string.Format(spName, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"));
+            var query = string.Format(spName, startDate.ToString("yyyy-MM-dd hh:mm:ss"), endDate.ToString("yyyy-MM-dd hh:mm:ss"));
             IQueryable<CommentDTO> comments = _unitOfWork.RawSqlQuery(query, map => new CommentDTO
             {
                 CommentId = Convert.ToInt32(map["CommentId"] ?? 0),

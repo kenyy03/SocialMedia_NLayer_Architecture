@@ -12,7 +12,7 @@ namespace SocialMedia.Core.Interfaces
         Task CommitAsync();
         void RollBack();
         void BeginTransaction();
-        IQueryable<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, params object[] parameters) where T : class;
+        IQueryable<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, int timeOut=30, params object[] parameters) where T : class;
         void SetCommandTimeout(int seconds);
     }
 }

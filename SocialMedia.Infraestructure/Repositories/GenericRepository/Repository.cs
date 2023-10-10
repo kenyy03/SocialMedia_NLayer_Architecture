@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
-using SocialMedia.Infraestructure.Data;
 
 namespace SocialMedia.Infraestructure.Repositories.GenericRepository
 {
@@ -20,6 +19,11 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
         {
             var entityAdded = await _entities.AddAsync(entity);
             return entityAdded.Entity;
+        }
+
+        public async Task AddRangeAsync(params TEntity[] entities)
+        {
+            await _entities.AddRangeAsync(entities);
         }
 
         public async Task Delete(int id)
@@ -58,5 +62,9 @@ namespace SocialMedia.Infraestructure.Repositories.GenericRepository
 
         public IQueryable<TEntity> AsQueryable() => _entities;
 
+        public void RemoveRange(params TEntity[] entities)
+        {
+            _entities.RemoveRange(entities);
+        }
     }
 }
