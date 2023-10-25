@@ -18,17 +18,17 @@ namespace SocialMedia.API.Controllers
         }
 
         [HttpGet("get-comments-by-dates")]
-        public async Task<IActionResult> GetPosts([FromQuery] CommentRequest request)
+        public IActionResult GetPosts([FromQuery] CommentRequest request)
         {
             try
             {
                 var comments = _commentService.GetComments(request);
-                var response = ApiResponse<PagedList<CommentDTO>>.Success(comments);
+                var response = ApiResponse<PaginatedList<CommentDTO>>.Success(comments);
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                var response = ApiResponse<PagedList<CommentDTO>>.Failure(message: ex.InnerException?.Message ?? ex.Message);
+                var response = ApiResponse<PaginatedList<CommentDTO>>.Failure(message: ex.InnerException?.Message ?? ex.Message);
                 return BadRequest(response);
             }
         }

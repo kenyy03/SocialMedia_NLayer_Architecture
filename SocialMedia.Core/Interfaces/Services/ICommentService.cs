@@ -5,6 +5,6 @@ namespace SocialMedia.Core.Interfaces.Services
 {
     public interface ICommentService
     {
-        PagedList<CommentDTO> GetComments(CommentRequest request);
+        PaginatedList<CommentDTO> GetComments(CommentRequest request);
     }
 }

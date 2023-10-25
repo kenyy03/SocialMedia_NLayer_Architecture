@@ -29,12 +29,12 @@ namespace SocialMedia.API.Controllers
             try
             {
                 var posts = _postService.GetPosts(request);
-                var response = ApiResponse<PagedList<PostDTO>>.Success(posts);
+                var response = ApiResponse<PaginatedList<PostDTO>>.Success(posts);
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                var response = ApiResponse<PagedList<PostDTO>>.Failure(message: ex.InnerException?.Message ?? ex.Message);
+                var response = ApiResponse<PaginatedList<PostDTO>>.Failure(message: ex.InnerException?.Message ?? ex.Message);
                 return BadRequest(response);
             }
         }

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
-using SocialMedia.Infraestructure.Data;
 using SocialMedia.Infraestructure.Repositories.GenericRepository;
 using System.Data.Common;
 using System.Data;
@@ -108,22 +107,25 @@ namespace SocialMedia.Infraestructure.Repositories
 
         public IQueryable<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map, int timeOut = 30, params object[] parameters) where T : class
         {
-            DbCommand command = _context.Database.GetDbConnection().CreateCommand();
+            using DbConnection connection = _context.Database.GetDbConnection();
+            using DbCommand command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = query;
             command.CommandTimeout = timeOut;
-            command.Parameters.AddRange(parameters); 
-            _context.Database.OpenConnection();
-
-            List<T> result = new List<T>();
-            DbDataReader reader= command.ExecuteReader();
+            command.Parameters.AddRange(parameters);
+            connection.Open();
+            List<T> result = new();
+            using DbDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
                 result.Add(map(reader));
             }
 
-            _context.Database.CloseConnection();
+            reader.Close();
+            command.Dispose();
+            connection.Close();
+            connection.Dispose();
             return result.AsQueryable();
         }
 

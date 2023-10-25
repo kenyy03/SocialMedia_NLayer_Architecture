@@ -5,6 +5,7 @@ using SocialMedia.Core.Entities.PostEntity;
 using SocialMedia.Core.Entities.UserEntity;
 using SocialMedia.Core.Enumerations;
 using SocialMedia.Core.Exceptions;
+using SocialMedia.Core.Extensions;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Interfaces.Services;
 
@@ -29,15 +30,15 @@ namespace SocialMedia.Core.Services.SocialMediaServices
             return post ?? new Post();
         }
 
-        public PagedList<PostDTO> GetPosts(PostRequest request)
+        public PaginatedList<PostDTO> GetPosts(PostRequest request)
         {
             int page = request?.Page ?? 1;
             int pageSize = request?.Pagesize ?? 10;
             var posts = _postRepository.AsQueryable()
                                        .AsNoTracking()
                                        .Select(s => s.ToDto())
-                                       .AsQueryable();
-            return PagedList<PostDTO>.Create(posts, page, pageSize);
+                                       .AsPaginatedList(page, pageSize);
+            return posts;
         }
 
         public async Task<Post> AddPost(Post post)

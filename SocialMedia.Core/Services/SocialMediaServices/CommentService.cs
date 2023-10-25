@@ -3,6 +3,7 @@ using SocialMedia.Core.DTOs.CommentDTOs;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Interfaces.Services;
 using SocialMedia.Core.Enumerations;
+using SocialMedia.Core.Extensions;
 
 namespace SocialMedia.Core.Services.SocialMediaServices
 {
@@ -15,7 +16,7 @@ namespace SocialMedia.Core.Services.SocialMediaServices
             _unitOfWork = unitOfWorkFactory.CreateUnitOfWork(UnitOfWorkType.SocialMedia);
         }
 
-        public PagedList<CommentDTO> GetComments(CommentRequest request)
+        public PaginatedList<CommentDTO> GetComments(CommentRequest request)
         {
             DateTime startDate = request?.StartDate ?? DateTime.MinValue;
             DateTime endDate = request?.EndDate ?? DateTime.MaxValue;
@@ -23,7 +24,7 @@ namespace SocialMedia.Core.Services.SocialMediaServices
             int pageSize = request?.Pagesize ?? 10;
             string spName = "EXEC SpGetActiveComments @StartDate='{0}', @EndDate='{1}'";
             var query = string.Format(spName, startDate.ToString("yyyy-MM-dd hh:mm:ss"), endDate.ToString("yyyy-MM-dd hh:mm:ss"));
-            IQueryable<CommentDTO> comments = _unitOfWork.RawSqlQuery(query, map => new CommentDTO
+            PaginatedList<CommentDTO> comments = _unitOfWork.RawSqlQuery(query, map => new CommentDTO
             {
                 CommentId = Convert.ToInt32(map["CommentId"] ?? 0),
                 PostId = Convert.ToInt32(map["PostId"] ?? 0),
@@ -32,9 +33,9 @@ namespace SocialMedia.Core.Services.SocialMediaServices
                 UserFullName = Convert.ToString(map["UserFullName"]),
                 CommentDescription = Convert.ToString(map["CommentDescription"]),
                 CommentDate = Convert.ToDateTime(map["CommentDate"]),
-            });
+            }).AsPaginatedList(page, pageSize);
 
-            return PagedList<CommentDTO>.Create(comments, page, pageSize);
+            return comments;
         }
     }
 }
