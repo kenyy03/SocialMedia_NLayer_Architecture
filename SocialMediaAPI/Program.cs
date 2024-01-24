@@ -1,12 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Interfaces.Services;
 using SocialMedia.Core.Services.SocialMediaServices;
 using SocialMedia.Infraestructure.Data;
 using SocialMedia.Infraestructure.Extensions;
 using SocialMedia.Infraestructure.Filters;
-using SocialMedia.Infraestructure.Repositories;
-using SocialMedia.Infraestructure.Repositories.GenericRepository;
 using SocialMedia.Core.Enumerations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +22,16 @@ builder.Services.AddUnitOfWorkBuilder((configuration, provider) =>
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddMvc(options => options.Filters.Add<ValidationFilter>());
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowOriginSocialMediaApi",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,6 +46,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowOriginSocialMediaApi");
 
 app.UseAuthorization();
 

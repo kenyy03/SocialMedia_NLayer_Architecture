@@ -115,7 +115,7 @@ namespace SocialMedia.Infraestructure.Repositories
             command.Parameters.AddRange(parameters);
             connection.Open();
             List<T> result = new();
-            using DbDataReader reader = command.ExecuteReader();
+            using DbDataReader reader = command.ExecuteReader(CommandBehavior.CloseConnection);
 
             while (reader.Read())
             {
