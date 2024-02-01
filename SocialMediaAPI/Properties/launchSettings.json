@@ -16,7 +16,11 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5174",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SOCIAL_MEDIA_SERVER": "DESKTOP-0TQCTUO",
+        "SOCIAL_MEDIA_BD": "SocialMedia",
+        "SOCIAL_MEDIA_USER": "sa",
+        "SOCIAL_MEDIA_PASSWORD": "admin123"
       }
     },
     "https": {
