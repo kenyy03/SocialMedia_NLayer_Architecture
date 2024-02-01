@@ -13,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers(options => options.Filters.Add<GlobalExceptionsFilter>())
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-                //.ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
-builder.Services.AddDbContext<SocialMediaContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SocialMedia")));
+//.ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
+builder.Services.AddDbContext<SocialMediaContext>(options => options.UseSqlServer(builder.Configuration.GetFromEnviroment("SocialMedia")));
 builder.Services.AddUnitOfWorkBuilder((configuration, provider) =>
 {
     configuration.RegisterUnitOfWork(UnitOfWorkType.SocialMedia, () => provider.GetRequiredService<SocialMediaContext>());
